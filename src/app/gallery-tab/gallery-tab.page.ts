@@ -3,11 +3,11 @@ import { ActionSheetController } from '@ionic/angular';
 import { UserPhoto, PhotoService } from '../services/photo.service';
 
 @Component({
-  selector: 'app-tab2',
-  templateUrl: 'tab2.page.html',
-  styleUrls: ['tab2.page.scss']
+  selector: 'app-gallery-tab',
+  templateUrl: 'gallery-tab.page.html',
+  styleUrls: ['gallery-tab.page.scss']
 })
-export class Tab2Page {
+export class GalleryTabPage {
 
   constructor(public photoService: PhotoService, public actionSheetController: ActionSheetController) {}
 
@@ -17,16 +17,15 @@ export class Tab2Page {
 
   public async showActionSheet(photo: UserPhoto, position: number) {
     const actionSheet = await this.actionSheetController.create({
-      header: 'Photos',
       buttons: [{
-        text: 'Delete',
+        text: 'Deletar',
         role: 'destructive',
         icon: 'trash',
         handler: () => {
           this.photoService.deletePicture(photo, position);
         }
       }, {
-        text: 'Cancel',
+        text: 'Cancelar',
         icon: 'close',
         role: 'cancel',
         handler: () => {
@@ -35,5 +34,9 @@ export class Tab2Page {
       }]
     });
     await actionSheet.present();
+  }
+
+  public async addNewToGallery(){
+   await this.photoService.addNewToGallery();
   }
 }

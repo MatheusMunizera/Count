@@ -1,9 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { Storage } from '@capacitor/storage';
 import { Platform } from '@ionic/angular';
+import { CountService } from './count.service';
 
 
 
@@ -14,7 +16,7 @@ export class PhotoService {
   public photos: UserPhoto[] = [];
   private PHOTO_STORAGE: string = 'photos';
 
-  constructor(private platform: Platform) {}
+  constructor(private platform: Platform, private countService: CountService, private http: HttpClient) {}
 
   public async loadSaved() {
     // Retrieve cached photo array data
@@ -70,12 +72,14 @@ export class PhotoService {
   private async savePicture(photo: Photo) {
     // Convert photo to base64 format, required by Filesystem API to save
     const base64Data = await this.readAsBase64(photo);
+  
+    const countedBase64Data = await this.countService.sendImageBase64(base64Data);
 
     // Write the file to the data directory
-    const fileName = new Date().getTime() + '.jpeg';
+    const fileName = 'Count-' + new Date().getTime() + '.jpeg';
     const savedFile = await Filesystem.writeFile({
       path: fileName,
-      data: base64Data,
+      data: countedBase64Data,
       directory: Directory.Data,
     });
 
@@ -104,13 +108,13 @@ export class PhotoService {
       const file = await Filesystem.readFile({
         path: photo.path,
       });
-
+      
+      
       return file.data;
     } else {
       // Fetch the photo, read as a blob, then convert to base64 format
       const response = await fetch(photo.webPath!);
       const blob = await response.blob();
-
       return (await this.convertBlobToBase64(blob)) as string;
     }
   }
