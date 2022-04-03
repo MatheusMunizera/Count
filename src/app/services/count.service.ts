@@ -11,25 +11,40 @@ export class CountService {
 
   constructor(private http: HttpClient) { }
 
-  private readonly COUNT_API_URL = "teste";
+  private readonly COUNT_API_URL = "api-count.url.python";
 
-  public photoBase64 : string = null;
+  public modelSelected : string  = null;
 
-  public async sendImageBase64(photoBase64: string){
-    //Post to Count API, that's return a base64 string with counted objects
+  private async sendBinaryImage(photoArray: Uint8Array){
+    
     try{
         await this.http
-        .post<string>(this.COUNT_API_URL,photoBase64)
+        .post<string>(`${this.COUNT_API_URL}${this.modelSelected}`,photoArray)
         .toPromise()
-        .then((data) =>  this.photoBase64 = data);
-
-      
-    return this.photoBase64
+        .then((data) =>  data);
     }catch(e){
       console.log(e)
     }
     
   }
+
+  public async countImage(base64) : Promise<string>{
+    const byteArray = this.base64ToBinary(base64);
+    const imageCounted = await this.sendBinaryImage(byteArray);
+
+
+    return "Retornar o numero sobre a imagem"
+  }
+
+  private base64ToBinary(base64 : string): Uint8Array   { 
+    const array = new Uint8Array(new ArrayBuffer(base64.length));
+    for(let i = 0; i < base64.length; i++) {
+      array[i] = base64.charCodeAt(i);
+    }
+    return array;
+
+  }
+  
 
   
 

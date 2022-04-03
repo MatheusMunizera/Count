@@ -73,13 +73,13 @@ export class PhotoService {
     // Convert photo to base64 format, required by Filesystem API to save
     const base64Data = await this.readAsBase64(photo);
   
-    const countedBase64Data = await this.countService.sendImageBase64(base64Data);
+    this.countService.countImage(base64Data);
 
     // Write the file to the data directory
     const fileName = 'Count-' + new Date().getTime() + '.jpeg';
     const savedFile = await Filesystem.writeFile({
       path: fileName,
-      data: countedBase64Data,
+      data: base64Data,
       directory: Directory.Data,
     });
 
@@ -109,7 +109,7 @@ export class PhotoService {
         path: photo.path,
       });
       
-      
+
       return file.data;
     } else {
       // Fetch the photo, read as a blob, then convert to base64 format
@@ -138,7 +138,7 @@ export class PhotoService {
     });
   }
 
-  convertBlobToBase64 = (blob: Blob) =>
+  private convertBlobToBase64 = (blob: Blob) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onerror = reject;

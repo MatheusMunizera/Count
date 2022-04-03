@@ -36,7 +36,5 @@ export class GalleryTabPage {
     await actionSheet.present();
   }
 
-  public async addNewToGallery(){
-   await this.photoService.addNewToGallery();
-  }
+ 
 }

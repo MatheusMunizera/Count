@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar class="">
+    <ion-icon name="calculator" class="fs-3 ms-3" ></ion-icon> 
+    <ion-title class="d-inline-block ps-2">
+        Count App 
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+  <ion-list class="bg-grey">
+    <ion-searchbar placeholder="Selecione modelo para contagem" animated [(ngModel)] = "currentSearch" (ionChange)="updateFilter()"></ion-searchbar>
+    <ion-radio-group>
+      <ion-item *ngFor="let item of currentItem">
+        <ion-label>{{item.name}}</ion-label>
+        <ion-radio slot="start" value="{{item.value}}" (click)="this.countService.modelSelected = item.value;addNewToGallery()"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+  
+</ion-content>
