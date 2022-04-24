@@ -72,14 +72,22 @@ export class PhotoService {
   private async savePicture(photo: Photo) {
     // Convert photo to base64 format, required by Filesystem API to save
     const base64Data = await this.readAsBase64(photo);
-  
-    this.countService.countImage(base64Data);
+    
+    var correctImageData = base64Data.split(',')
+    
+    var returnImage;
+    await this.countService.sendBinaryImage(correctImageData[1])
+                           .then(data => {
+                             var cha = JSON.parse(JSON.stringify(data))
+                             returnImage = cha.image
+                           });
 
+    console.log(returnImage)
     // Write the file to the data directory
     const fileName = 'Count-' + new Date().getTime() + '.jpeg';
     const savedFile = await Filesystem.writeFile({
       path: fileName,
-      data: base64Data,
+      data: returnImage,
       directory: Directory.Data,
     });
 
