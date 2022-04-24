@@ -13,6 +13,7 @@ im_b64 = base64.b64encode(im_bytes).decode("utf8")
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
   
 payload = json.dumps({"image": im_b64, "other_key": "value"})
+print(im_b64)
 response = requests.post(api, data=payload, headers=headers)
 
 try:
