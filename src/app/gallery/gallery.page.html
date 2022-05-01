@@ -1,0 +1,54 @@
+<ion-header collapse="fade" [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>
+      <a href="/" class="btn text-white" >Count 🧮</a>
+      
+      <ion-icon class="float-end" name="help-circle-outline"></ion-icon>
+    </ion-title>
+    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+ 
+
+  <ion-row *ngIf="photoService.photos.length <= 0;else gallery" >
+    <ion-col class="text-center text-muted"> 
+      <p>
+        Primeira vez no Count? <br>
+        Experimente clicando abaixo
+      </p>
+      <ion-icon  name="arrow-down-outline"></ion-icon>
+    </ion-col>
+  </ion-row>
+
+
+  <ng-template #gallery>
+    <ion-row>
+    <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
+      <ion-img [src]="photo.webviewPath" (click)="showActionSheet(photo, position)"></ion-img>
+    </ion-col>
+    </ion-row>
+  </ng-template>
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" >
+    <ion-fab-button>
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start" >
+      <ion-fab-button (click)="photoService.addNewToGallery('Camera')">
+        <ion-icon  name="camera"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+    <ion-fab-list side="end">
+      <ion-fab-button (click)="photoService.addNewToGallery('Photos')">
+        <ion-icon name="images-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>
+
+ 
+  
+
