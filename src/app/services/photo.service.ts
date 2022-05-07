@@ -54,6 +54,7 @@ export class PhotoService {
     //Capitalize type
     const capitalizedType = type[0].toUpperCase() + type.substr(1);
 
+
     // Take a photo
     const capturedPhoto = await Camera.getPhoto({
       resultType: CameraResultType.Uri, // file-based data; provides best performance

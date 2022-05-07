@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, IonRouterOutlet } from '@ionic/angular';
 import { UserPhoto, PhotoService } from '../services/photo.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class GalleryPage  {
     await this.photoService.loadSaved();
   }
 
+  
   public async showActionSheet(photo: UserPhoto, position: number) {
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
@@ -36,5 +37,8 @@ export class GalleryPage  {
     await actionSheet.present();
   }
 
+ 
+
+ 
 
 }

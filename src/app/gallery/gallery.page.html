@@ -1,19 +1,37 @@
+
 <ion-header collapse="fade" [translucent]="true" class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
-      <a href="/" class="btn text-primary" >Count 🧮</a>
-      
-      <ion-icon class="float-end" name="help-circle-outline"></ion-icon>
-    </ion-title>
-    
+    <ion-row>
+      <ion-col >
+        <a href="/" class="btn ion-text-left logo fs-3" >
+          <span contenteditable="true"  >Co</span>
+          <span contenteditable="true" class="text-white" >unt</span>
+        </a>
+      </ion-col>
+      <ion-col>
+          <ion-icon id="trigger-button" class=" fs-2 text-white float-end text-primary"  name="help-circle-outline"></ion-icon>
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
- 
+<ion-content fullscreen>
+  <ion-modal trigger="trigger-button"  [isOpen]="false" [swipeToClose]="true"  > 
+    <ng-template>
+      <ion-header translucent>
 
-  <ion-row *ngIf="photoService.photos.length <= 0;else gallery" >
-    <ion-col class="text-center text-muted"> 
+        <ion-toolbar>
+          <ion-title class="text-white fs-3">Ajuda</ion-title>
+          
+        </ion-toolbar>
+      </ion-header>
+      <ion-content fullscreen>
+
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <ion-row class="vh-100 " *ngIf="photoService.photos.length <= 0;else gallery" >
+    <ion-col class="text-center my-auto text-muted"> 
       <p>
         Primeira vez no Count? <br>
         Experimente clicando abaixo
@@ -25,14 +43,15 @@
 
   <ng-template #gallery>
     <ion-row>
-    <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
+    <ion-col size="2
+    " class="m-1 border-primary border" *ngFor="let photo of photoService.photos; index as position">
       <ion-img [src]="photo.webviewPath" (click)="showActionSheet(photo, position)"></ion-img>
     </ion-col>
     </ion-row>
   </ng-template>
 
   <ion-fab vertical="bottom" horizontal="center" slot="fixed" >
-    <ion-fab-button>
+    <ion-fab-button >
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start" >
@@ -47,6 +66,8 @@
     </ion-fab-list>
   </ion-fab>
 
+
+  
 </ion-content>
 
  
