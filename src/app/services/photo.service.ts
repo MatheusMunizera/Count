@@ -50,18 +50,27 @@ export class PhotoService {
   */
  
 
-  public async addNewToGallery(type: string) {
-    //Capitalize type
+  
+
+  public async addNewToGallery(type: string, capturedPhotoMobile: String = "") {
+    let capturedPhoto 
+    
+    
+    if(!this.platform.is("mobile")){
+      //Capitalize type
     const capitalizedType = type[0].toUpperCase() + type.substr(1);
-
-
     // Take a photo
-    const capturedPhoto = await Camera.getPhoto({
+    capturedPhoto = await Camera.getPhoto({
       resultType: CameraResultType.Uri, // file-based data; provides best performance
       source: CameraSource[capitalizedType], // automatically take a new photo with the camera
       quality: 100, // highest quality (0 to 100)
     });
 
+  }else{
+       capturedPhoto = capturedPhotoMobile;
+  }
+
+  
     const savedImageFile = await this.savePicture(capturedPhoto);
 
     // Add new photo to Photos array
@@ -74,12 +83,21 @@ export class PhotoService {
     });
   }
 
+  public getPhotos(){
+    return this.photos;
+  }
+
   // Save picture to file on device
-  private async savePicture(photo: Photo) {
-    // Convert photo to base64 format, required by Filesystem API to save
-    const base64Data = await this.readAsBase64(photo);
-  
-    this.countService.countImage(base64Data);
+  private async savePicture(photo) {
+    let base64Data : string;
+    if(typeof(photo) == "string"){
+      base64Data = photo
+    }else{
+      // Convert photo to base64 format, required by Filesystem API to save
+      base64Data = await this.readAsBase64(photo);
+    }
+    
+    //this.countService.countImage(base64Data);
 
     // Write the file to the data directory
     const fileName = 'Count-' + new Date().getTime() + '.jpeg';
@@ -91,10 +109,9 @@ export class PhotoService {
 
     if (this.platform.is('hybrid')) {
       // Display the new image by rewriting the 'file://' path to HTTP
-      // Details: https://ionicframework.com/docs/building/webview#file-protocol
       return {
         filepath: savedFile.uri,
-        webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+        webviewPath:  Capacitor.convertFileSrc(savedFile.uri),
       };
     } else {
       // Use webPath to display the new image instead of base64 since it's

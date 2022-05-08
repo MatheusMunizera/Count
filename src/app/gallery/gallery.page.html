@@ -30,22 +30,23 @@
       </ion-content>
     </ng-template>
   </ion-modal>
-  <ion-row class="vh-100 " *ngIf="photoService.photos.length <= 0;else gallery" >
+  <ion-row class="vh-100 " *ngIf="this.photoService.photos.length <= 0;else gallery" >
     <ion-col class="text-center my-auto text-muted"> 
       <p>
         Primeira vez no Count? <br>
         Experimente clicando abaixo
       </p>
       <ion-icon  name="arrow-down-outline"></ion-icon>
+      
     </ion-col>
   </ion-row>
 
 
   <ng-template #gallery>
-    <ion-row>
+    <ion-row class="container">
     <ion-col size="2
-    " class="m-1 border-primary border" *ngFor="let photo of photoService.photos; index as position">
-      <ion-img [src]="photo.webviewPath" (click)="showActionSheet(photo, position)"></ion-img>
+    " class=" border-primary border" *ngFor="let photo of this.photoService.photos; index as position">
+      <ion-img [src]="photo.webviewPath" (click)="showActionSheet(photo, position)" loading="lazy"></ion-img>
     </ion-col>
     </ion-row>
   </ng-template>
@@ -54,14 +55,24 @@
     <ion-fab-button >
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
-    <ion-fab-list side="start" >
-      <ion-fab-button (click)="photoService.addNewToGallery('Camera')">
-        <ion-icon  name="camera"></ion-icon>
+    <ion-fab-list side="start">
+      <div *ngIf="isMobile;else web">
+        <ion-fab-button > 
+          <label>
+            <ion-icon  name="camera" class="fs-2"></ion-icon> 
+            <input class="d-none" accept="image/*" capture="environment" type="file" (change)="onFileSelected($event)">
+          </label>
       </ion-fab-button>
+      </div>
+      <ng-template #web>
+        <ion-fab-button (click)="this.photoService.addNewToGallery('Camera')">
+          <ion-icon  name="camera" class="fs-2"></ion-icon>
+        </ion-fab-button>
+      </ng-template>
     </ion-fab-list>
     <ion-fab-list side="end">
-      <ion-fab-button (click)="photoService.addNewToGallery('Photos')">
-        <ion-icon name="images-outline"></ion-icon>
+      <ion-fab-button (click)="this.photoService.addNewToGallery('Photos')">
+        <ion-icon name="images-outline" class="fs-2"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
