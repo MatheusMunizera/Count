@@ -23,7 +23,8 @@ export class PhotoService {
   private type = TypeCamera
   public valueOfTakes : number = 1;
    
-  
+  //TODO:
+  // Ajustar carregamento das imagens
 
   constructor(private platform: Platform, private router: Router) {}
 
@@ -54,6 +55,7 @@ export class PhotoService {
   }
 
   private async openCameraOrSelectPhoto(type: string) { 
+    console.log(type)
       // Take a photo
       const capturedPhoto = await Camera.getPhoto({
         resultType: CameraResultType.Uri, // file-based data; provides best performance
@@ -75,6 +77,7 @@ export class PhotoService {
     }
    
   }
+
 
   public async savePictureStorage(capturedPhoto: string | Photo){
 

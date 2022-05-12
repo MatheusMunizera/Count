@@ -1,5 +1,5 @@
 export enum TypeCamera{
     WEB_CAMERA = 'Camera',
-    FILES = 'Photo',
+    FILES = 'Photos',
     NATIVE_CAMERA = 'Mobile'
 }
