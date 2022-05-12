@@ -72,7 +72,7 @@ export class PhotoService {
       if(typeOrImage !== this.type.NATIVE_CAMERA){
       await  this.openCameraOrSelectPhoto(typeOrImage).then(()=>this.router.navigate([`/counting`]))
       }else{
-        await this.savePictureTemp(typeOrImage);
+        await this.savePictureTemp(typeOrImage).then(()=>this.router.navigate([`/counting`]));
       }
     }
    
