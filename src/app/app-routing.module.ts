@@ -5,6 +5,10 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./gallery/gallery.module').then( m => m.GalleryPageModule)
+  },
+  {
+    path: '',
+    loadChildren: () => import('./counting/counting.module').then( m => m.CountingPageModule)
   }
 ];
 @NgModule({

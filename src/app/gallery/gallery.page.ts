@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActionSheetController, IonRouterOutlet, Platform } from '@ionic/angular';
+import { CountService } from '../services/count.service';
 import { UserPhoto, PhotoService } from '../services/photo.service';
+import { TypeCamera } from '../shared/enums/type-camera.enum';
 
 @Component({
   selector: 'app-gallery',
@@ -9,10 +11,13 @@ import { UserPhoto, PhotoService } from '../services/photo.service';
 })
 export class GalleryPage  {
 
-  constructor(public photoService: PhotoService, public actionSheetController: ActionSheetController, private platform: Platform) {}
+  constructor(public photoService: PhotoService, private countService: CountService, public actionSheetController: ActionSheetController, private platform: Platform) {}
 
   public isMobile: boolean;
-  public picture: String;
+  public picture: string;
+  public type = TypeCamera
+  public stackPhotos : Array<Array<UserPhoto>> = new Array;
+
 
  
   public FileImage : any;
@@ -20,15 +25,16 @@ export class GalleryPage  {
   async ngOnInit() {
     await this.photoService.loadSaved();
     this.isMobile = this.platform.is("mobile");
+    
   }
 
  
-  async onFileSelected(event) {
+  async openCameraNativeMobile(event) {
     this.FileImage = event.target.files[0];
          var reader = new FileReader();
          reader.onload = (event:any) => {
            this.picture =event.target.result;  
-            this.photoService.addNewToGallery("Camera", this.picture);
+            this.photoService.getPhoto(this.picture);
           }
           
           reader.readAsDataURL(this.FileImage);
@@ -44,12 +50,13 @@ export class GalleryPage  {
         role: 'destructive',
         icon: 'trash',
         handler: () => {
-          this.photoService.deletePicture(photo, position);
+          this.photoService.deletePictureStoraged(photo, position);
         }
       }, {
         text: 'Cancelar',
         icon: 'close',
         role: 'cancel',
+        cssClass: 'text-primary',
         handler: () => {
           // Nothing to do, action sheet is automatically closed
          }
