@@ -35,7 +35,7 @@ export class CountService {
       await this.sendBinaryImage(e.data)
       .finally(()=>this.router.navigate([`/`]))
       // TO DO
-      .then(()=>this.photoService.savePictureStorage(e.data))
+      .then(()=>this.photoService.savePictureStorage(e.webviewPath))
       
     });
     this.photoService.photosTemp.length = 0;

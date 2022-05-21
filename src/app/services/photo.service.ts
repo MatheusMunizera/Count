@@ -55,7 +55,6 @@ export class PhotoService {
   }
 
   private async openCameraOrSelectPhoto(type: string) { 
-    console.log(type)
       // Take a photo
       const capturedPhoto = await Camera.getPhoto({
         resultType: CameraResultType.Uri, // file-based data; provides best performance
@@ -67,12 +66,14 @@ export class PhotoService {
   }
 
   public async getPhoto(typeOrImage: string){
-
+    
     for (let i = 0; i < this.valueOfTakes; i++) {
-      if(typeOrImage !== this.type.NATIVE_CAMERA){
-      await  this.openCameraOrSelectPhoto(typeOrImage).then(()=>this.router.navigate([`/counting`]))
+      if(typeOrImage != this.type.NATIVE_CAMERA){
+
+        await this.savePictureTemp(typeOrImage).finally(()=>this.router.navigate([`/counting`]));
       }else{
-        await this.savePictureTemp(typeOrImage).then(()=>this.router.navigate([`/counting`]));
+        await  this.openCameraOrSelectPhoto(typeOrImage).then(()=>this.router.navigate([`/counting`]))
+    console.log("entrei nao mobile")
       }
     }
    
@@ -82,18 +83,24 @@ export class PhotoService {
   public async savePictureStorage(capturedPhoto: string | Photo){
 
     const savedImageFile = await this.setPictureFile(capturedPhoto);
+    console.log(savedImageFile)
     // Add new photo to Photos array
       this.photosStoraged.unshift(savedImageFile);
+
+      console.table(this.photosStoraged)
       // Cache all photo data for future retrieval
       Storage.set({
         key: this.PHOTO_STORAGE,
         value: JSON.stringify(this.photosStoraged),
       });
 
+      
+
   }
 
   public async savePictureTemp(capturedPhoto: string | Photo){
       const savedImageFile = await this.setPictureFile(capturedPhoto);
+      console.log(savedImageFile)
       this.photosTemp.unshift(savedImageFile);
   }
     
@@ -103,6 +110,7 @@ export class PhotoService {
   private async setPictureFile(photo) {
     let base64Data : string;
     if(typeof(photo) == "string"){
+      console.log("sou string")
       base64Data = photo
     }else{
       // Convert photo to base64 format, required by Filesystem API to save
@@ -118,6 +126,7 @@ export class PhotoService {
     });
 
     if (this.platform.is('mobile')) {
+      
       // Display the new image by rewriting the 'file://' path to HTTP
       return {
         filepath: savedFile.uri,

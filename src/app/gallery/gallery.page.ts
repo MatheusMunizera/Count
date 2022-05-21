@@ -30,16 +30,23 @@ export class GalleryPage  {
 
  
   async openCameraNativeMobile(event) {
-    this.FileImage = event.target.files[0];
-         var reader = new FileReader();
-         reader.onload = (event:any) => {
-           this.picture =event.target.result;  
-            this.photoService.getPhoto(this.picture);
+
+    if(event.target.files.length == this.photoService.valueOfTakes){
+    for (let i = 0; i < event.target.files.length; i++) {
+      this.FileImage = event.target.files[i];
+           var reader = new FileReader();
+           reader.onload = (event:any) => {
+             this.picture =event.target.result;  
+              this.photoService.getPhoto(this.picture);
+            }
+            
+            reader.readAsDataURL(this.FileImage);
+        
           }
-          
-          reader.readAsDataURL(this.FileImage);
-      
+        }else{
+          console.log("O total de imagens deve ser o mesmo que a quantidade de vezes")
         }
+    }
         
        
   
