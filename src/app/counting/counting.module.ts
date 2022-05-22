@@ -7,13 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { CountingPageRoutingModule } from './counting-routing.module';
 
 import { CountingPage } from './counting.page';
+import { CountHeaderComponent } from '../components/count-header/count-header.component';
+import { CountHeaderModule } from '../components/count-header/count-header.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CountingPageRoutingModule
+    CountingPageRoutingModule,
+    CountHeaderModule
   ],
   declarations: [CountingPage]
 })

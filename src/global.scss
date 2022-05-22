@@ -26,7 +26,7 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 :root {
-	--ion-background-color: #151515;
+	--ion-background-color: #0C0D05;
 	--ion-background-color-rgb: 21,21,21;
 
 	--ion-text-color: #ffffff;
@@ -62,12 +62,12 @@
   
   body {
      /** primary **/
-  --ion-color-primary: #282B28;
+  --ion-color-primary: #1A1A1A;
   --ion-color-primary-rgb: 66,140,255;
-  --ion-color-primary-contrast: #6078c0;//;//#FF9900;
+  --ion-color-primary-contrast: #E7EBB0;
   --ion-color-primary-contrast-rgb: 255,255,255;
-  --ion-color-primary-shade: #7e8ebe89;//#ffc16394;
-  --ion-color-primary-tint:  #7e8ebe89; //66757F
+  --ion-color-primary-shade: #c6c99d42;//#ffc16394;
+  --ion-color-primary-tint:  #c6c99d73; //66757F
   
     --ion-color-secondary: #50c8ff;
     --ion-color-secondary-rgb: 80,200,255;
@@ -104,12 +104,12 @@
     --ion-color-danger-shade: #e04055;
     --ion-color-danger-tint: #ff5b71;
   
-    --ion-color-dark: #3256c3;//#282B28;
-    --ion-color-dark-rgb: 66,140,255;//244, 244, 244;
-    --ion-color-dark-contrast: #ffffff;//#FF9900;
-    --ion-color-dark-contrast-rgb:255,255,255;
-    --ion-color-dark-shade:#ffc16394;
-    --ion-color-dark-tint: #6078c0;
+    --ion-color-dark: #C6C99D;
+    --ion-color-dark-rgb: 66,140,255;
+    --ion-color-dark-contrast: black;
+    --ion-color-dark-contrast-rgb: 255,255,255;
+    --ion-color-dark-shade: #ffc16394;
+    --ion-color-dark-tint: #c6c99d73;
   
     --ion-color-medium: #989aa2;
     --ion-color-medium-rgb: 152,154,162;
@@ -118,12 +118,12 @@
     --ion-color-medium-shade: #86888f;
     --ion-color-medium-tint: #a2a4ab;
 
- --ion-color-light: #3256c3;//#282B28;
- --ion-color-light-rgb: 66,140,255;//244, 244, 244;
- --ion-color-light-contrast: #ffffff;//#FF9900;
+ --ion-color-light: #C6C99D;
+ --ion-color-light-rgb: 66,140,255;
+ --ion-color-light-contrast: black;
  --ion-color-light-contrast-rgb: 255,255,255;
  --ion-color-light-shade: #ffc16394;
- --ion-color-light-tint: #6078c0;
+ --ion-color-light-tint: #3f3f3d73;
   }
   
   /*
@@ -132,7 +132,7 @@
    */
   
   .ios body {
-    --ion-background-color: #151515;
+    --ion-background-color: #0C0D05;
     --ion-background-color-rgb: 0,0,0;
   
     --ion-text-color: #ffffff;

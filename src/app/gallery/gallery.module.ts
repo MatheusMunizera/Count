@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { GalleryPageRoutingModule } from './gallery-routing.module';
 
 import { GalleryPage } from './gallery.page';
+import { CountHeaderComponent } from '../components/count-header/count-header.component';
+import { CountHeaderModule } from '../components/count-header/count-header.module';
 
 
 @NgModule({
@@ -14,7 +16,8 @@ import { GalleryPage } from './gallery.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    GalleryPageRoutingModule
+    GalleryPageRoutingModule,
+    CountHeaderModule
   ],
   declarations: [GalleryPage]
 })

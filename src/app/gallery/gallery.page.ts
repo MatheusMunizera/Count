@@ -13,7 +13,6 @@ export class GalleryPage  {
 
   constructor(public photoService: PhotoService, private countService: CountService, public actionSheetController: ActionSheetController, private platform: Platform) {}
 
-  public isMobile: boolean;
   public picture: string;
   public type = TypeCamera
   public stackPhotos : Array<Array<UserPhoto>> = new Array;
@@ -24,32 +23,8 @@ export class GalleryPage  {
 
   async ngOnInit() {
     await this.photoService.loadSaved();
-    this.isMobile = this.platform.is("mobile");
-    
   }
-
- 
-  async openCameraNativeMobile(event) {
-
-    if(event.target.files.length == this.photoService.valueOfTakes){
-    for (let i = 0; i < event.target.files.length; i++) {
-      this.FileImage = event.target.files[i];
-           var reader = new FileReader();
-           reader.onload = (event:any) => {
-             this.picture =event.target.result;  
-              this.photoService.getPhoto(this.picture);
-            }
-            
-            reader.readAsDataURL(this.FileImage);
-        
-          }
-        }else{
-          console.log("O total de imagens deve ser o mesmo que a quantidade de vezes")
-        }
-    }
-        
        
-  
   public async showActionSheet(photo: UserPhoto, position: number) {
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
@@ -71,18 +46,6 @@ export class GalleryPage  {
     });
     await actionSheet.present();
 
-
-    
   }
-
-  
-
-  
-
-
-
- 
-
- 
 
 }

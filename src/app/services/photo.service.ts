@@ -2,13 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
-import { Capacitor } from '@capacitor/core';
+import * as core from '@capacitor/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { Storage } from '@capacitor/storage';
 import { Platform } from '@ionic/angular';
-import { empty } from 'rxjs';
-import { CountService } from './count.service';
 import { TypeCamera } from '../shared/enums/type-camera.enum';
+import { Capacitor } from '@capacitor/core';
 
 
 
@@ -29,15 +28,11 @@ export class PhotoService {
   constructor(private platform: Platform, private router: Router) {}
 
   public async loadSaved() {
-    
     // Retrieve cached photo array data
     const photoList = await Storage.get({ key: this.PHOTO_STORAGE });
-    
     this.photosStoraged = JSON.parse(photoList.value) || [];
-
     // If running on the web...
     if (!this.platform.is('hybrid')) {
-
       // Display the photo by reading into base64 format
       for (let photo of this.photosStoraged) {
         // Read each saved photo's data from the Filesystem
@@ -45,12 +40,9 @@ export class PhotoService {
           path: photo.filepath,
           directory: Directory.Data,
         });
-
         // Web platform only: Load the photo as base64 data
         photo.webviewPath = `data:image/jpeg;base64,${readFile.data}`;
       }
-   
-     
     }
   }
 
@@ -61,62 +53,49 @@ export class PhotoService {
         source: CameraSource[type], // automatically take a new photo with the camera
         quality: 100, // highest quality (0 to 100)
       });
-
       await this.savePictureTemp(capturedPhoto)
   }
 
-  public async getPhoto(typeOrImage: string){
+  public async getPhoto(type: string){
     
     for (let i = 0; i < this.valueOfTakes; i++) {
-      if(typeOrImage != this.type.NATIVE_CAMERA){
-
-        await this.savePictureTemp(typeOrImage).finally(()=>this.router.navigate([`/counting`]));
-      }else{
-        await  this.openCameraOrSelectPhoto(typeOrImage).then(()=>this.router.navigate([`/counting`]))
-    console.log("entrei nao mobile")
+        await  this.openCameraOrSelectPhoto(type).then(()=>this.router.navigate([`/counting`]))
       }
     }
    
-  }
+  public async savePictureStorage(capturedPhoto){
+    const convertCapturedPhoto = {
+      webPath: capturedPhoto.webviewPath,
+      format: "png",
+      saved: false
+    }
 
-
-  public async savePictureStorage(capturedPhoto: string | Photo){
-
-    const savedImageFile = await this.setPictureFile(capturedPhoto);
-    console.log(savedImageFile)
+    const savedImageFile = await this.setPictureFile(convertCapturedPhoto);
     // Add new photo to Photos array
       this.photosStoraged.unshift(savedImageFile);
-
-      console.table(this.photosStoraged)
       // Cache all photo data for future retrieval
       Storage.set({
         key: this.PHOTO_STORAGE,
         value: JSON.stringify(this.photosStoraged),
       });
-
-      
-
   }
 
-  public async savePictureTemp(capturedPhoto: string | Photo){
-      const savedImageFile = await this.setPictureFile(capturedPhoto);
-      console.log(savedImageFile)
-      this.photosTemp.unshift(savedImageFile);
+  public async savePictureTemp(capturedPhoto){
+    console.log("a", capturedPhoto)
+      const tempImage = await this.setPictureFile(capturedPhoto);
+      this.photosTemp.unshift(tempImage);
   }
-    
-  
 
   // Save picture to file on device
   private async setPictureFile(photo) {
     let base64Data : string;
     if(typeof(photo) == "string"){
-      console.log("sou string")
       base64Data = photo
     }else{
       // Convert photo to base64 format, required by Filesystem API to save
       base64Data = await this.readAsBase64(photo);
     }
-
+  
     // Write the file to the data directory
     const fileName = 'Count-' + new Date().getTime() + '.jpeg';
     const savedFile = await Filesystem.writeFile({
@@ -124,26 +103,20 @@ export class PhotoService {
       data: base64Data,
       directory: Directory.Data,
     });
-
-    if (this.platform.is('mobile')) {
-      
-      // Display the new image by rewriting the 'file://' path to HTTP
+    if (this.platform.is('hybrid')) {
       return {
         filepath: savedFile.uri,
-        webviewPath:  photo,
-        data: base64Data,
+        webviewPath:  Capacitor.convertFileSrc(savedFile.uri),
+        data: base64Data
       };
     } else {
-      // Use webPath to display the new image instead of base64 since it's
-      // already loaded into memory
       return {
         filepath: fileName,
         webviewPath: photo.webPath,
-        data: base64Data,
+        data: base64Data
       };
     }
   }
-
   // Read camera photo into base64 format based on the platform the app is running on
   private async readAsBase64(photo: Photo) {
     // "hybrid" will detect Cordova or Capacitor
@@ -152,8 +125,6 @@ export class PhotoService {
       const file = await Filesystem.readFile({
         path: photo.path,
       });
-      
-
       return file.data;
     } else {
       // Fetch the photo, read as a blob, then convert to base64 format
@@ -162,6 +133,7 @@ export class PhotoService {
       return (await this.convertBlobToBase64(blob)) as string;
     }
   }
+  // ****** Converter os dois em um ********
 
   // Delete picture by removing it from reference data and the filesystem
   public async deletePictureStoraged(photo: UserPhoto, position: number) {
@@ -186,12 +158,6 @@ export class PhotoService {
     // Remove this photo from the Photos reference data array
     this.photosTemp.splice(position, 1);
 
-    // Update photos array cache by overwriting the existing photo array
-    Storage.set({
-      key: this.PHOTO_STORAGE,
-      value: JSON.stringify(this.photosTemp),
-    });
-
     // delete photo file from filesystem
     const filename = photo.filepath.substr(photo.filepath.lastIndexOf('/') + 1);
     await Filesystem.deleteFile({
@@ -199,7 +165,7 @@ export class PhotoService {
       directory: Directory.Data,
     });
   }
-
+ // **************************************************
   public async deleteAllPicturesStoraged(){
     this.photosStoraged.forEach(async (e)=>{
       await Filesystem.deleteFile({
@@ -215,7 +181,6 @@ export class PhotoService {
     });
   }
 
-
   private convertBlobToBase64 = (blob: Blob) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -225,8 +190,8 @@ export class PhotoService {
       };
       reader.readAsDataURL(blob);
     });
-}
 
+}
 export interface UserPhoto {
   filepath: string;
   webviewPath: string;

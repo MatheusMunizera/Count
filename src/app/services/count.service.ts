@@ -15,13 +15,11 @@ export class CountService {
 
   private readonly COUNT_API_URL = "api-count.url.python";
 
-  public modelSelected : string  = null;
-
   private async sendBinaryImage(photoArray: Uint8Array | String){
     
     try{
         await this.http
-        .post<string>(`${this.COUNT_API_URL}${this.modelSelected}`,photoArray)
+        .post<string>(`${this.COUNT_API_URL}`,photoArray)
         .toPromise()
         .then((data) =>  data);
     }catch(e){
@@ -31,16 +29,15 @@ export class CountService {
   }
   
   public async getCount(){
-    this.photoService.photosTemp.forEach(async e => {
-      await this.sendBinaryImage(e.data)
+    this.photoService.photosTemp.forEach(async (e,i) => 
+    {
+      console.log(i)
+      await this.sendBinaryImage(e.webviewPath)
       .finally(()=>this.router.navigate([`/`]))
-      // TO DO
-      .then(()=>this.photoService.savePictureStorage(e.webviewPath))
-      
+      .then(()=>this.photoService.savePictureStorage(e))
+      .then(()=> this.photoService.deletePictureTemp(e,i))
     });
     this.photoService.photosTemp.length = 0;
-    
-
   }
 
   

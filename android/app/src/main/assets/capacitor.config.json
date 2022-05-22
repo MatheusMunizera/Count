@@ -1,0 +1,6 @@
+{
+	"appId": "com.count.app",
+	"appName": "Count",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
