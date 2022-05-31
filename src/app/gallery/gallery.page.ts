@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActionSheetController, IonRouterOutlet, Platform } from '@ionic/angular';
+import { ActionSheetController, IonRouterOutlet, LoadingController, Platform } from '@ionic/angular';
 import { CountService } from '../services/count.service';
 import { UserPhoto, PhotoService } from '../services/photo.service';
 import { TypeCamera } from '../shared/enums/type-camera.enum';
@@ -11,7 +11,7 @@ import { TypeCamera } from '../shared/enums/type-camera.enum';
 })
 export class GalleryPage  {
 
-  constructor(public photoService: PhotoService, private countService: CountService, public actionSheetController: ActionSheetController, private platform: Platform) {}
+  constructor(public photoService: PhotoService,  public actionSheetController: ActionSheetController, private platform: Platform) {}
 
   public picture: string;
   public type = TypeCamera
@@ -42,10 +42,40 @@ export class GalleryPage  {
         handler: () => {
           // Nothing to do, action sheet is automatically closed
          }
+      }, {
+        text: `Caixas: ${photo.value}`,
+        icon: 'cube',
+        role: 'selected',
+        cssClass: 'text-primary'
       }]
     });
     await actionSheet.present();
 
   }
+
+  public async showActionSheetToDeleteAll() {
+    const actionSheet = await this.actionSheetController.create({
+      buttons: [{
+        text: 'Deletar',
+        role: 'destructive',
+        icon: 'trash',
+        handler: () => {
+          this.photoService.deleteAllPicturesStoraged();
+        }
+      }, {
+        text: 'Cancelar',
+        icon: 'close',
+        role: 'cancel',
+        cssClass: 'text-primary',
+        handler: () => {
+          // Nothing to do, action sheet is automatically closed
+         }
+      }]
+    });
+    await actionSheet.present();
+
+  }
+
+  
 
 }

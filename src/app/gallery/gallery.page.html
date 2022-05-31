@@ -35,21 +35,28 @@
   </ion-row>
   
   <ng-template #gallery >
-    <ion-row class="card bg-transparent">
-    <ion-card >
+    <ion-row  class="">
+      
+    <ion-card class="d-block">
       <ion-card-title class="card-header fs-5 text-center">
-        Total: {{this.photoService.valueOfTakes}} chifre
+        Soma Total: {{this.photoService.getTotalSum()}} caixas
+        <!-- <div class="card-buttons "> -->
+          <ion-icon name="trash-outline" class="fs-5 float-end" (click)="showActionSheetToDeleteAll()" style="color: #722F2F;"></ion-icon>
+          <!-- <ion-icon name="download-outline" class="fs-5 float-end m-3" ></ion-icon> -->
+        <!-- </div> -->
       </ion-card-title>
       <ion-row class="card-body ">
-        <ion-col size="6" class=" border-primary border p-0" *ngFor="let photo of this.photoService.photosStoraged; index as position">
-          <ion-img [src]="photo.webviewPath" (click)="showActionSheet(photo, position)"></ion-img>
+       
+        <ion-col *ngIf="this.photoService.photosStoraged.length == 1; else size6">
+          <ion-img [src]="this.photoService.photosStoraged[0].webviewPath" (click)="showActionSheet(this.photoService.photosStoraged[0],0)"></ion-img>
         </ion-col>
+        <ng-template #size6>
+        <ion-col size="6" class=" border-primary border p-0" *ngFor="let photo of this.photoService.photosStoraged; index as position">
+          <ion-img [src]="photo?.webviewPath" (click)="showActionSheet(photo, position)"></ion-img>
+        </ion-col>
+      </ng-template>
       </ion-row>
-      <div class="card-buttons">
-      <ion-icon name="trash-outline" class="fs-5 float-start m-3"></ion-icon>
-      <ion-icon name="download-outline" class="fs-5 float-end m-3"></ion-icon>
-    </div>
-
+     
     </ion-card>
   </ion-row>
    
@@ -65,6 +72,7 @@
         </ion-fab-button>
     </ion-fab-list>
     <ion-fab-list side="end">
+      
       <ion-fab-button (click)="this.photoService.getPhoto(type.FILES)">
         <ion-icon name="images-outline" class="fs-2"></ion-icon>
       </ion-fab-button>
