@@ -85,7 +85,9 @@ def run_inference_for_single_image(model, image):
   return output_dict
 
 def show_inference(model, image_path):
-  image_np = np.array(Image.open(io.BytesIO(image_path)))
+  img = Image.open(io.BytesIO(image_path))
+  img = img.resize((800, 600))
+  image_np = np.array(img)
   output_dict = run_inference_for_single_image(model, image_np)
   vis_util.visualize_boxes_and_labels_on_image_array(
     image_np,
