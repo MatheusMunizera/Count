@@ -94,7 +94,16 @@ export class PhotoService {
       key: this.PHOTO_STORAGE,
       value: JSON.stringify(this.photosStoraged),
     });
-
+    
+    if (!this.platform.is('hybrid')) {
+        // Read each saved photo's data from the Filesystem
+        const readFile = await Filesystem.readFile({
+          path: this.photosStoraged[0].filepath,
+          directory: Directory.Data,
+        });
+        // Web platform only: Load the photo as base64 data
+        this.photosStoraged[0].webviewPath = `data:image/jpeg;base64,${readFile.data}`;
+    }
   }
 
   public async savePictureTemp(capturedPhoto) {
