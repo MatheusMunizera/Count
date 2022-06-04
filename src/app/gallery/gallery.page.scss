@@ -1,6 +1,4 @@
-ion-content ion-toolbar {
-    --background: white;
-  }
+
 
   .fab-list-side-start{
     margin: -70px 66px;
@@ -14,7 +12,21 @@ ion-content ion-toolbar {
     height: 60px;
   }
 
-.fab-button-in-list >ion-icon {
-    font-size: 22px;
-    color: white !important;
+.card-buttons ion-icon:nth-child(1){
+  color: #722F2F;
 }
+
+.card-buttons ion-icon:nth-child(2){
+  background: #E7EBB0;
+  color: black;
+  border-radius: 1.2vw;
+  display: inline-block;
+  padding: 1vw;
+}
+
+.active{
+  background-color: #d6cc3d;
+}
+
+
+

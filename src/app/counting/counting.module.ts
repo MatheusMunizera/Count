@@ -4,21 +4,20 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { GalleryPageRoutingModule } from './gallery-routing.module';
+import { CountingPageRoutingModule } from './counting-routing.module';
 
-import { GalleryPage } from './gallery.page';
+import { CountingPage } from './counting.page';
 import { CountHeaderComponent } from '../components/count-header/count-header.component';
 import { CountHeaderModule } from '../components/count-header/count-header.module';
-
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    GalleryPageRoutingModule,
+    CountingPageRoutingModule,
     CountHeaderModule
   ],
-  declarations: [GalleryPage]
+  declarations: [CountingPage]
 })
-export class GalleryPageModule {}
+export class CountingPageModule {}

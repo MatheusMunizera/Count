@@ -1,52 +1,85 @@
-<ion-header collapse="fade" [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-title>
-      <a href="/" class="btn text-white" >Count 🧮</a>
-      
-      <ion-icon class="float-end" name="help-circle-outline"></ion-icon>
-    </ion-title>
-    
-  </ion-toolbar>
-</ion-header>
+<app-count-header></app-count-header>
 
-<ion-content>
+<ion-content fullscreen>
+  <ion-row class="card bg-transparent">
+    <ion-card>
+      <ion-card-title class="card-header fs-5 text-center">
+        Quantas capturas para análise?
+      </ion-card-title>
+      <ion-row class="card-body ">
+        <ion-col class="d-flex justify-content-center">
+          <a class="btn btn-primary" (click)="this.photoService.valueOfTakes = 1" [ngClass]="this.photoService.valueOfTakes == 1 ? 'active' : ''">1</a>
+      </ion-col>
+        <ion-col class="d-flex justify-content-center">
+        <a class="btn btn-primary" (click)="this.photoService.valueOfTakes = 2" [ngClass]="this.photoService.valueOfTakes == 2 ? 'active' : ''">2</a>
+      </ion-col>
+        <ion-col class="d-flex justify-content-center"> 
+        <a class="btn btn-primary" (click)="this.photoService.valueOfTakes = 3" [ngClass]="this.photoService.valueOfTakes == 3 ? 'active' : ''">3</a>
+      </ion-col>
+        <ion-col class="d-flex justify-content-center">
+        <a class="btn btn-primary" (click)="this.photoService.valueOfTakes = 4" [ngClass]="this.photoService.valueOfTakes == 4 ? 'active' : ''">4</a>
+      </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-row>
+
  
-
-  <ion-row *ngIf="photoService.photos.length <= 0;else gallery" >
-    <ion-col class="text-center text-muted"> 
+  <ion-row class="vh-100" *ngIf="this.photoService.photosStoraged.length <= 0;else gallery" >
+    <ion-col size="12" class="text-center my-auto text-muted"> 
       <p>
         Primeira vez no Count? <br>
         Experimente clicando abaixo
       </p>
-      <ion-icon  name="arrow-down-outline"></ion-icon>
+      <ion-icon  name="arrow-down-outline"></ion-icon>      
     </ion-col>
   </ion-row>
-
-
-  <ng-template #gallery>
-    <ion-row>
-    <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
-      <ion-img [src]="photo.webviewPath" (click)="showActionSheet(photo, position)"></ion-img>
-    </ion-col>
-    </ion-row>
+  
+  <ng-template #gallery >
+    <ion-row  class="">
+      
+    <ion-card class="d-block">
+      <ion-card-title class="card-header fs-5 text-center">
+        Soma Total: {{this.photoService.getTotalSum()}} caixas
+        <!-- <div class="card-buttons "> -->
+          <ion-icon name="trash-outline" class="fs-5 float-end" (click)="showActionSheetToDeleteAll()" style="color: #722F2F;"></ion-icon>
+          <!-- <ion-icon name="download-outline" class="fs-5 float-end m-3" ></ion-icon> -->
+        <!-- </div> -->
+      </ion-card-title>
+      <ion-row class="card-body ">
+        <ion-col *ngIf="this.photoService.photosStoraged.length == 1; else size6">
+          <ion-img [src]="this.photoService.photosStoraged[0].webviewPath" (click)="showActionSheet(this.photoService.photosStoraged[0],0)"></ion-img>
+        </ion-col>
+        <ng-template #size6>
+        <ion-col size="6" class=" border-primary border p-0" *ngFor="let photo of this.photoService.photosStoraged; index as position">
+          <ion-img [src]="photo?.webviewPath" (click)="showActionSheet(photo, position)"></ion-img>
+        </ion-col>
+      </ng-template>
+      </ion-row>
+     
+    </ion-card>
+  </ion-row>
+   
   </ng-template>
 
   <ion-fab vertical="bottom" horizontal="center" slot="fixed" >
-    <ion-fab-button>
+    <ion-fab-button >
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
-    <ion-fab-list side="start" >
-      <ion-fab-button (click)="photoService.addNewToGallery('Camera')">
-        <ion-icon  name="camera"></ion-icon>
-      </ion-fab-button>
+    <ion-fab-list side="start">
+        <ion-fab-button (click)="this.photoService.getPhoto(type.WEB_CAMERA)">
+          <ion-icon  name="camera" class="fs-2"></ion-icon>
+        </ion-fab-button>
     </ion-fab-list>
     <ion-fab-list side="end">
-      <ion-fab-button (click)="photoService.addNewToGallery('Photos')">
-        <ion-icon name="images-outline"></ion-icon>
+      
+      <ion-fab-button (click)="this.photoService.getPhoto(type.FILES)">
+        <ion-icon name="images-outline" class="fs-2"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
 
+
+  
 </ion-content>
 
  
