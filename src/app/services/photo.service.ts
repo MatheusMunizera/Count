@@ -143,7 +143,6 @@ export class PhotoService {
 
     const web = URL.createObjectURL(blob)
 
-
     // Write the file to the data directory
     const fileName = 'Count-' + new Date().getTime() + '.jpeg';
     const savedFile = await Filesystem.writeFile({
