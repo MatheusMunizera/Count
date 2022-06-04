@@ -15,25 +15,26 @@ export class CountService {
 
   private readonly COUNT_API_URL = "http://localhost:8080/test";
 
-  public async sendBinaryImage(photoArray: Uint8Array | String){
-    
-    try{
-      var toApiObject = {"image": photoArray, "other_key": "value"};
+  public async sendBinaryImage(photoArray: Uint8Array | String) {
 
-      return await new Promise(resolve =>{
+    var toApiObject = { "image": photoArray, "other_key": "value" };
+
+    return await new Promise(resolve => {
+      try {
         this.http.post<string>(this.COUNT_API_URL, toApiObject)
-        .subscribe(data => {
-          console.log(data)
-          resolve(JSON.parse(JSON.stringify(data)))
-        })
-      });        
-  }catch(e){
-    console.log(e)
-  }
-    
+          .subscribe(data => {
+
+            if (data)
+              resolve(JSON.parse(JSON.stringify(data)))
+
+          })
+      } catch (ex) {
+        console.log(ex, "Error.CountService.SendBinaryImage")
+      }
+    });
   }
 
 }
 
-  
+
 

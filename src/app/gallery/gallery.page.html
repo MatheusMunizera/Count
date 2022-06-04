@@ -46,7 +46,6 @@
         <!-- </div> -->
       </ion-card-title>
       <ion-row class="card-body ">
-       
         <ion-col *ngIf="this.photoService.photosStoraged.length == 1; else size6">
           <ion-img [src]="this.photoService.photosStoraged[0].webviewPath" (click)="showActionSheet(this.photoService.photosStoraged[0],0)"></ion-img>
         </ion-col>

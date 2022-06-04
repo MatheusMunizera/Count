@@ -28,55 +28,51 @@ export class PhotoService {
   constructor(private platform: Platform, private router: Router, public loadingController: LoadingController, private countService: CountService) { }
 
   public async loadSaved() {
-    // Retrieve cached photo array data
-    const photoList = await Storage.get({ key: this.PHOTO_STORAGE });
-    this.photosStoraged = JSON.parse(photoList.value) || [];
-    // If running on the web...
-    if (!this.platform.is('hybrid')) {
-      // Display the photo by reading into base64 format
-      for (let photo of this.photosStoraged) {
-        // Read each saved photo's data from the Filesystem
-        const readFile = await Filesystem.readFile({
-          path: photo.filepath,
-          directory: Directory.Data,
-        });
-        // Web platform only: Load the photo as base64 data
-        photo.webviewPath = `data:image/jpeg;base64,${readFile.data}`;
+    try {
+      const photoList = await Storage.get({ key: this.PHOTO_STORAGE });
+      this.photosStoraged = JSON.parse(photoList.value) || [];
+      // If running on the web...
+      if (!this.platform.is('hybrid')) {
+        // Display the photo by reading into base64 format
+        for (let photo of this.photosStoraged) {
+          // Read each saved photo's data from the Filesystem
+          const readFile = await Filesystem.readFile({
+            path: photo.filepath,
+            directory: Directory.Data,
+          });
+          // Web platform only: Load the photo as base64 data
+          photo.webviewPath = `data:image/jpeg;base64,${readFile.data}`;
+        }
       }
+    } catch (er) {
+      console.log(er, "Error.PhotoService.LoadSaved")
     }
-
   }
 
   private async openCameraOrSelectPhoto(type: string) {
-    // Take a photo
-    
-
-    // if(type == "Photos"){
-    //   capturedPhoto = await Camera.pickImages({
-    //     quality: 100, 
-    //     width: 250,     
-    //     height: 250,
-    //     presentationStyle: 'fullscreen',
-    //     limit: this.valueOfTakes
-    //   });
-    // }else{
-   const   capturedPhoto = await Camera.getPhoto({
-        resultType: CameraResultType.Uri, // file-based data; provides best performance
-        source: CameraSource[type], // automatically take a new photo with the camera
+    //await Camera.pickImages 
+    try {
+      const capturedPhoto = await Camera.getPhoto({
+        resultType: CameraResultType.Uri,
+        source: CameraSource[type],
         quality: 100,
         width: 250,
         height: 250,
         presentationStyle: 'fullscreen',
       });
-    // }
-
-    await this.savePictureTemp(capturedPhoto)
+      await this.savePictureTemp(capturedPhoto)
+    } catch (error) {
+      console.log(error, "Error.PhotoService.OpenCameraOrSelectPhoto")
+    }
   }
 
   public async getPhoto(type: string) {
-
-    for (let i = 0; i < this.valueOfTakes; i++) {
-      await this.openCameraOrSelectPhoto(type).then(() => this.router.navigate([`/counting`]))
+    try {
+      for (let i = 0; i < this.valueOfTakes; i++) {
+        await this.openCameraOrSelectPhoto(type).then(() => this.router.navigate([`/counting`]))
+      }
+    } catch (er) {
+      console.log(er, "Erro.PhotoService.GetPhoto")
     }
   }
 
@@ -94,15 +90,15 @@ export class PhotoService {
       key: this.PHOTO_STORAGE,
       value: JSON.stringify(this.photosStoraged),
     });
-    
+
     if (!this.platform.is('hybrid')) {
-        // Read each saved photo's data from the Filesystem
-        const readFile = await Filesystem.readFile({
-          path: this.photosStoraged[0].filepath,
-          directory: Directory.Data,
-        });
-        // Web platform only: Load the photo as base64 data
-        this.photosStoraged[0].webviewPath = `data:image/jpeg;base64,${readFile.data}`;
+      // Read each saved photo's data from the Filesystem
+      const readFile = await Filesystem.readFile({
+        path: this.photosStoraged[0].filepath,
+        directory: Directory.Data,
+      });
+      // Web platform only: Load the photo as base64 data
+      this.photosStoraged[0].webviewPath = `data:image/jpeg;base64,${readFile.data}`;
     }
   }
 
@@ -111,7 +107,7 @@ export class PhotoService {
     this.photosTemp.unshift(tempImage);
   }
 
- 
+
   public async count() {
     this.photosTemp.forEach(async (e, i) => {
       let splitData = e.data.split(',');
@@ -128,10 +124,10 @@ export class PhotoService {
       translucent: true,
     });
 
-    
+
     await loading.present();
     await this.count(),
-    await loading.dismiss();
+      await loading.dismiss();
   }
 
   private async setPictureCounted(photoCount) {
@@ -174,52 +170,60 @@ export class PhotoService {
 
   // Save picture to file on device
   private async setPictureFile(photo) {
-    let base64Data: string;
-    if (typeof (photo) == "string") {
-      base64Data = photo
-    } else {
-      // Convert photo to base64 format, required by Filesystem API to save
-      base64Data = await this.readAsBase64(photo);
-    }
-
-    // Write the file to the data directory
-    const fileName = 'Count-' + new Date().getTime() + '.jpeg';
-    const savedFile = await Filesystem.writeFile({
-      path: fileName,
-      data: base64Data,
-      directory: Directory.Data,
-    });
-    if (this.platform.is('hybrid')) {
-      return {
-        filepath: savedFile.uri,
-        webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+    try {
+      let base64Data: string;
+      if (typeof (photo) == "string") {
+        base64Data = photo
+      } else {
+        // Convert photo to base64 format, required by Filesystem API to save
+        base64Data = await this.readAsBase64(photo);
+      }
+      // Write the file to the data directory
+      const fileName = 'Count-' + new Date().getTime() + '.jpeg';
+      const savedFile = await Filesystem.writeFile({
+        path: fileName,
         data: base64Data,
-        value: 0
-      };
-    } else {
-      return {
-        filepath: fileName,
-        webviewPath: photo.webPath,
-        data: base64Data,
-        value: 0
-      };
+        directory: Directory.Data,
+      });
+      if (this.platform.is('hybrid')) {
+        return {
+          filepath: savedFile.uri,
+          webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+          data: base64Data,
+          value: 0
+        };
+      } else {
+        return {
+          filepath: fileName,
+          webviewPath: photo.webPath,
+          data: base64Data,
+          value: 0
+        };
+      }
+    } catch (error) {
+      console.log(error, "Error.PhotoService.SetPictureFile")
     }
   }
   // Read camera photo into base64 format based on the platform the app is running on
   private async readAsBase64(photo: Photo) {
-    // "hybrid" will detect Cordova or Capacitor
-    if (this.platform.is('hybrid')) {
-      // Read the file into base64 format
-      const file = await Filesystem.readFile({
-        path: photo.path,
-      });
-      return file.data;
-    } else {
-      // Fetch the photo, read as a blob, then convert to base64 format
-      const response = await fetch(photo.webPath!);
-      const blob = await response.blob();
-      return (await this.convertBlobToBase64(blob)) as string;
+    try {
+      // "hybrid" will detect Cordova or Capacitor
+      if (this.platform.is('hybrid')) {
+        // Read the file into base64 format
+        const file = await Filesystem.readFile({
+          path: photo.path,
+        });
+        return file.data;
+      } else {
+        // Fetch the photo, read as a blob, then convert to base64 format
+        const response = await fetch(photo.webPath!);
+        const blob = await response.blob();
+        return (await this.convertBlobToBase64(blob)) as string;
+      }
+    } catch (error) {
+      console.log(error,"Error.PhotoService.ReadAsBase64")
     }
+
   }
 
   // Delete picture by removing it from reference data and the filesystem
