@@ -1,0 +1,16 @@
+absl==0.0
+absl_py==0.10.0
+Flask==1.1.2
+Flask_Cors==3.0.10
+ipython==8.4.0
+matplotlib==3.3.4
+mock==4.0.3
+numpy==1.19.5
+Pillow==9.1.1
+protobuf==4.21.1
+requests==2.25.1
+scipy==1.6.1
+six==1.15.0
+tensorflow==2.4.1
+tf_slim==1.1.0
+opencv-python==3.4.11.43
