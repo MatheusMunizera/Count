@@ -1,0 +1,13 @@
+<app-count-header></app-count-header>
+
+<ion-content>
+  <ion-row class="container">
+    <ion-col size="6" class="border-primary border p-0" *ngFor="let photo of this.photoService.photosTemp; index as position">
+      <ion-img [src]="photo.webviewPath" (click)="showActionSheet(photo, position)" loading="lazy"></ion-img>
+    </ion-col>
+  </ion-row>
+
+</ion-content>
+
+<button type="button" class="btn btn-primary btn-block" (click)="this.photoService.getCount()">Iniciar Contagem</button>
+<button type="button" class="btn btn-cancel btn-block" (click)="this.cancelCounting()">Cancelar</button>

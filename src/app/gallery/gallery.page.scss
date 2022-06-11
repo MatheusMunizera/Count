@@ -1,0 +1,32 @@
+
+
+  .fab-list-side-start{
+    margin: -70px 66px;
+  }
+  .fab-list-side-end{
+    margin: -70px 66px;
+  }
+
+  .fab-button-in-list { 
+    width: 60px;
+    height: 60px;
+  }
+
+.card-buttons ion-icon:nth-child(1){
+  color: #722F2F;
+}
+
+.card-buttons ion-icon:nth-child(2){
+  background: #E7EBB0;
+  color: black;
+  border-radius: 1.2vw;
+  display: inline-block;
+  padding: 1vw;
+}
+
+.active{
+  background-color: #d6cc3d;
+}
+
+
+
