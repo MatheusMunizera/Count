@@ -225,3 +225,12 @@ ion-content::part(scroll) {
 -ms-overflow-style: none; // IE and Edge
 scrollbar-width: none; // Firefox
 }
+
+body{
+  max-width: 414px !important;
+  height: 100%;
+  padding: 0;
+  margin: 0 auto !important;
+  position: relative;
+  // height: 736px !important;
+}
